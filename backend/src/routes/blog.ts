@@ -15,7 +15,6 @@ export const blogRouter = new Hono<{
 
 blogRouter.use("/*", async (c, next) => {
   const authHeader = c.req.header("Authorization") || "";
-  console.log("Auth Header:", authHeader);
 
   if (!authHeader) {
     c.status(403);
@@ -23,11 +22,9 @@ blogRouter.use("/*", async (c, next) => {
   }
 
   try {
-    const token = authHeader.trim(); // Ensure no leading/trailing spaces
-    console.log("Token:", token);
+    const token = authHeader.trim(); 
 
     const user = await verify(token, c.env.JWT_SECRET);
-    console.log("Verified User:", user);
 
     if (user) {
       c.set("userId", user.id);

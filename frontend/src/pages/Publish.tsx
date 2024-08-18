@@ -27,7 +27,6 @@ export const Publish = () => {
         }
       });
   
-      console.log(response);
       navigate(`/blog/${response.data.id}`);
     } catch (error) {
       console.error('Error submitting blog:', error);
