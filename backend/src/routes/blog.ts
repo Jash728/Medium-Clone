@@ -112,6 +112,7 @@ blogRouter.get("/my-blogs", async (c) => {
         title: true,
         content: true,
         published: true,
+        createdAt:true,
       },
     });
 
@@ -133,6 +134,7 @@ blogRouter.get("/bulk", async (c) => {
       content: true,
       title: true,
       id: true,
+      createdAt:true,
       author: {
         select: {
           name: true,
@@ -158,6 +160,7 @@ blogRouter.get("/:id", async (c) => {
       id: true,
       title: true,
       content: true,
+      createdAt:true,
       author: {
         select: {
           name: true,
@@ -169,6 +172,19 @@ blogRouter.get("/:id", async (c) => {
   return c.json(post);
 });
 
+blogRouter.delete("/:id", async (c) => {
+  const id = c.req.param("id");
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
 
+  await prisma.post.delete({
+    where: {
+      id,
+    },
+  });
+
+  return c.json({ message: 'Blog post deleted successfully' });
+});
 
 

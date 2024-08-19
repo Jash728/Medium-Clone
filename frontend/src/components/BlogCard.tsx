@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { format } from 'date-fns';
 interface BlogCardProps {
   authorName: string;
   title: string;
@@ -27,7 +27,7 @@ export const BlogCard = ({
             <Circle />
           </div>
           <div className="pl-2 font-thin text-slate-500 text-sm flex justify-center flex-col">
-            {publishedDate}
+          {format(new Date(publishedDate), "do MMM yyyy")}
           </div>
         </div>
         <div className="text-xl font-semibold pt-2">{title}</div>
