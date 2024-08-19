@@ -54,3 +54,32 @@ export const useBlogs = () => {
 
   return { loading, blogs };
 };
+
+
+export const useBlogsbyuser = () => {
+  const [loading, setLoading] = useState(true);
+  const [userblogs, setUserBlogs] = useState<Blog[] | undefined>([]); // Ensure it's an array
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/blog/my-blogs`, {
+          headers: {
+            Authorization: token, // Add Bearer prefix
+          },
+        });
+        console.log("Response data from /user-blogs:", response.data);
+        setUserBlogs(response.data);
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, [token]);
+
+  return { loading, userblogs };
+};

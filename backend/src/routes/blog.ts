@@ -25,7 +25,8 @@ blogRouter.use("/*", async (c, next) => {
     const token = authHeader.trim(); 
 
     const user = await verify(token, c.env.JWT_SECRET);
-
+   
+    
     if (user) {
       c.set("userId", user.id);
       await next();
@@ -91,6 +92,37 @@ blogRouter.put("/:id", async (c) => {
   return c.json(updatedPost);
 });
 
+blogRouter.get("/my-blogs", async (c) => {
+  const userId = c.get("userId");
+
+  if (!userId) {
+    c.status(403);
+    return c.json({ message: "Not authorized" });
+  }
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const posts = await prisma.post.findMany({
+      where: { authorId: userId },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        published: true,
+      },
+    });
+
+    return c.json(posts);
+  } catch (error) {
+    console.error("Error fetching user's posts:", error);
+    c.status(500);
+    return c.json({ message: "Failed to fetch posts", error: error.message });
+  }
+});
+
 blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
@@ -136,3 +168,7 @@ blogRouter.get("/:id", async (c) => {
 
   return c.json(post);
 });
+
+
+
+

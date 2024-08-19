@@ -12,7 +12,7 @@ const app = new Hono<{
 	}
 }>();
 
-app.use('/*', cors())
+app.use('/*', cors({ origin: '*' }));
 
 app.route('/api/v1/user', userRouter)
 app.route('/api/v1/blog', blogRouter)

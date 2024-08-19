@@ -18,8 +18,11 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
         `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
         postInputs
       );
-      const jwt = response.data;
-      localStorage.setItem("token", jwt);
+      const { token, username } = response.data;
+
+      // Store in local storage
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", username);
       navigate("/blogs");
     } catch (error) {
       console.log(error);
