@@ -6,7 +6,6 @@ import { BlogSkeleton } from "../components/BlogSkeleton";
 import Pagination from "../components/Pagination";
 import { Modal } from '../components/Modal';
 import { BACKEND_URL } from '../config';
-
 import { format } from 'date-fns';
 
 export const MyBlogs = () => {
@@ -41,12 +40,11 @@ export const MyBlogs = () => {
     }
   
     try {
-      console.log(editBlogId)
       const response = await fetch(`${BACKEND_URL}/api/v1/blog/${editBlogId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token // Ensure no leading/trailing spaces
+          'Authorization': token
         },
         body: JSON.stringify({ title, content }),
       });
@@ -70,7 +68,7 @@ export const MyBlogs = () => {
         const response = await fetch(`${BACKEND_URL}/api/v1/blog/${id}`, {
           method: 'DELETE',
           headers: {
-            'Authorization': token // Ensure no leading/trailing spaces
+            'Authorization': token
           },
         });
 
@@ -104,35 +102,39 @@ export const MyBlogs = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Appbar />
-      {currentBlogs ? (
-        <div className="flex justify-center">
-          <div className="max-w-full">
+      {currentBlogs && currentBlogs.length > 0 ? (
+        <div className="flex justify-center mt-8">
+          <div className="w-full max-w-4xl">
             {currentBlogs.map((blog) => (
-              <div key={blog.id} className="bg-white p-6 rounded-lg shadow-md mb-4">
-                <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
-                <p className="text-gray-700 mb-4">by {username}</p>
-                <p className="text-gray-600 mb-4">{blog.content}</p>
-                <p className="text-gray-500 mb-4">{format(new Date(blog.createdAt), "do MMM yyyy")}</p>
-                <button
-                  onClick={() => openEditModal(blog.id, blog.title, blog.content)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(blog.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
+              <div key={blog.id} className="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">{blog.title}</h2>
+                <p className="text-gray-600 text-sm mb-4">by {username}</p>
+                <p className="text-gray-700 mb-4">{blog.content}</p>
+                <p className="text-gray-500 text-sm mb-4">{format(new Date(blog.createdAt), "do MMM yyyy")}</p>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => openEditModal(blog.id, blog.title, blog.content)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(blog.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        "No blogs"
+        <div className="flex justify-center mt-8">
+          <p className="text-gray-600 text-lg">No blogs found.</p>
+        </div>
       )}
       <Pagination
         blogsPerPage={blogsPerPage}

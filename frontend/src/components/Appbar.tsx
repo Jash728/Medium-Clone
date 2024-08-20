@@ -1,34 +1,54 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { Avatar } from "./BlogCard";
 import { Link, useNavigate } from "react-router-dom";
 
-export const Appbar = () => {
+export const Appbar = ({ onSearch }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    navigate('/signin');
+    navigate("/");
   };
 
   const user = localStorage.getItem("username");
 
+  const handleSearch = () => {
+    onSearch(searchTerm);
+  };
+
   return (
-    <div className="border-b flex justify-between px-10 py-4 items-center">
-      <Link to={"/blogs"} className="flex flex-col justify-center cursor-pointer">
+    <div className="border-b flex justify-between px-10 py-4 items-center bg-white shadow">
+      <Link to={"/blogs"} className="text-xl font-semibold cursor-pointer">
         Medium
       </Link>
       <div className="flex items-center">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+            className="text-sm p-2 rounded-l-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+          />
+          <button
+            onClick={handleSearch}
+            className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-lg"
+          >
+            Search
+          </button>
+        </div>
         <Link to={`/publish`}>
           <button
             type="button"
-            className="mr-4 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2"
+            className="ml-4 text-white bg-green-700 hover:bg-green-800 px-4 py-2 rounded-lg"
           >
             New
           </button>
         </Link>
-        <div className="relative">
+        <div className="relative ml-4">
           <button
             type="button"
             onClick={() => setDropdownOpen(!isDropdownOpen)}
