@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
+
 interface BlogCardProps {
   authorName: string;
   title: string;
   content: string;
   publishedDate: string;
   id: string;
+  categories: string;
 }
 
 export const BlogCard = ({
@@ -14,20 +16,31 @@ export const BlogCard = ({
   title,
   content,
   publishedDate,
+  categories,
 }: BlogCardProps) => {
+  
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
   return (
     <Link to={`/blog/${id}`}>
       <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">
-        <div className="flex">
-          <Avatar name={authorName} />
-          <div className="font-extralight pl-2 text-sm flex justify-center flex-col">
-            {authorName}
+        <div className="flex justify-between items-center">
+          <div className="flex">
+            <Avatar name={authorName} />
+            <div className="font-extralight pl-2 text-sm flex justify-center flex-col">
+              {authorName}
+            </div>
+            <div className="flex justify-center flex-col pl-2 flex justify-center flex-col">
+              <Circle />
+            </div>
+            <div className="pl-2 font-thin text-slate-500 text-sm flex justify-center flex-col">
+              {format(new Date(publishedDate), "do MMM yyyy")}
+            </div>
           </div>
-          <div className="flex justify-center flex-col pl-2 flex justify-center flex-col">
-            <Circle />
-          </div>
-          <div className="pl-2 font-thin text-slate-500 text-sm flex justify-center flex-col">
-          {format(new Date(publishedDate), "do MMM yyyy")}
+          <div className="text-sm font-medium text-blue-600">
+            {capitalizeFirstLetter(categories)}
           </div>
         </div>
         <div className="text-xl font-semibold pt-2">{title}</div>

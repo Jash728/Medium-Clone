@@ -57,6 +57,7 @@ blogRouter.post("/", async (c) => {
       data: {
         title: body.title,
         content: body.content,
+        categories: body.categories,
         authorId: userId,
       },
     });
@@ -64,7 +65,7 @@ blogRouter.post("/", async (c) => {
       id: post.id,
     });
   } catch (error) {
-    console.error("Error creating post:", error); // Log the error for debugging
+    console.error("Error creating post:", error); 
     c.status(500).json({
       message: "Failed to create post",
       error: error.message,
@@ -112,6 +113,7 @@ blogRouter.get("/my-blogs", async (c) => {
         title: true,
         content: true,
         published: true,
+        categories:true,
         createdAt:true,
       },
     });
@@ -135,6 +137,7 @@ blogRouter.get("/bulk", async (c) => {
       title: true,
       id: true,
       createdAt:true,
+      categories:true,
       author: {
         select: {
           name: true,
@@ -161,6 +164,7 @@ blogRouter.get("/:id", async (c) => {
       title: true,
       content: true,
       createdAt:true,
+      categories:true,
       author: {
         select: {
           name: true,

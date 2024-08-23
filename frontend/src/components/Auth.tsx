@@ -20,7 +20,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       );
       const { token, username } = response.data;
 
-      // Store in local storage
+      
       localStorage.setItem("token", token);
       localStorage.setItem("username", username);
       navigate("/blogs");

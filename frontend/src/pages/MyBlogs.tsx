@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Appbar } from "../components/AppBar";
 import { useBlogsbyuser } from "../hooks";
-import { BlogCard } from "../components/BlogCard";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import Pagination from "../components/Pagination";
 import { Modal } from '../components/Modal';
@@ -11,6 +10,7 @@ import { format } from 'date-fns';
 export const MyBlogs = () => {
   const { loading, userblogs, refetch } = useBlogsbyuser();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const blogsPerPage = 5;
   const username = localStorage.getItem("username");
 
@@ -21,7 +21,14 @@ export const MyBlogs = () => {
 
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
-  const currentBlogs = userblogs?.slice(indexOfFirstBlog, indexOfLastBlog);
+
+  const filteredBlogs = userblogs?.filter(
+    (blog) =>
+      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const currentBlogs = filteredBlogs?.slice(indexOfFirstBlog, indexOfLastBlog);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -87,7 +94,7 @@ export const MyBlogs = () => {
   if (loading) {
     return (
       <div>
-        <Appbar />
+        <Appbar onSearch={(term) => setSearchTerm(term)} />
         <div className="flex justify-center">
           <div>
             <BlogSkeleton />
@@ -103,7 +110,7 @@ export const MyBlogs = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Appbar />
+      <Appbar onSearch={(term) => setSearchTerm(term)} />
       {currentBlogs && currentBlogs.length > 0 ? (
         <div className="flex justify-center mt-8">
           <div className="w-full max-w-4xl">
@@ -138,7 +145,7 @@ export const MyBlogs = () => {
       )}
       <Pagination
         blogsPerPage={blogsPerPage}
-        totalBlogs={userblogs?.length}
+        totalBlogs={filteredBlogs?.length}
         paginate={paginate}
         currentPage={currentPage}
       />

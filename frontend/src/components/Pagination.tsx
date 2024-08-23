@@ -4,7 +4,7 @@ const Pagination = ({ blogsPerPage, totalBlogs, paginate, currentPage }) => {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalBlogs / blogsPerPage); i++) {
-    pageNumbers.push(i); // [1, 2]
+    pageNumbers.push(i); 
   }
 
   return (

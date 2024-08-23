@@ -60,7 +60,7 @@ export const useBlogs = () => {
 
 export const useBlogsbyuser = () => {
   const [loading, setLoading] = useState(true);
-  const [userblogs, setUserBlogs] = useState<Blog[] | undefined>([]); // Ensure it's an array
+  const [userblogs, setUserBlogs] = useState<Blog[] | undefined>([]); 
   const token = localStorage.getItem("token");
 
   const fetchBlogs = async () => {

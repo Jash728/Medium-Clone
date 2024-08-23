@@ -23,4 +23,12 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   createdAt DateTime @default(now())
+  categories Category @default(OTHERS)
+}
+
+enum Category {
+  SPORTS
+  NEWS
+  CRIME
+  OTHERS
 }
