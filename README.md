@@ -15,3 +15,7 @@
 - **ORM**: Prisma with connection pooling
 - **Database**: PostgreSQL
 - **Authentication**: JWT (JSON Web Token) for secure authentication
+
+## Deployed URL
+
+https://medium-clone-xi-gules.vercel.app/
