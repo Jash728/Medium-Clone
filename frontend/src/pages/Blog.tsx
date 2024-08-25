@@ -12,7 +12,7 @@ export const Blog = () => {
     })
     if (loading || !blog) {
         return <div>
-            <Appbar />
+            <Appbar onSearch={(term) => console.log('Search term:', term)}/>
         
             <div className="h-screen flex flex-col justify-center">
                 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Appbar } from "../components/AppBar";
+import { Appbar } from "../components/Appbar";
 import { useBlogsbyuser } from "../hooks";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import Pagination from "../components/Pagination";
@@ -7,32 +7,39 @@ import { Modal } from '../components/Modal';
 import { BACKEND_URL } from '../config';
 import { format } from 'date-fns';
 
+type Blog = {
+  id: string;
+  title: string;
+  content: string;
+  createdAt?: string; // Make this optional if it may not always be present
+};
+
 export const MyBlogs = () => {
-  const { loading, userblogs, refetch } = useBlogsbyuser();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
+  const { loading, userblogs, refetch } = useBlogsbyuser(); // Remove the type argument
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const blogsPerPage = 5;
   const username = localStorage.getItem("username");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editBlogId, setEditBlogId] = useState(null);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [editBlogId, setEditBlogId] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
 
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
 
   const filteredBlogs = userblogs?.filter(
-    (blog) =>
+    (blog: Blog) =>
       blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       blog.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const currentBlogs = filteredBlogs?.slice(indexOfFirstBlog, indexOfLastBlog);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const openEditModal = (id, currentTitle, currentContent) => {
+  const openEditModal = (id: string, currentTitle: string, currentContent: string) => {
     setEditBlogId(id);
     setTitle(currentTitle);
     setContent(currentContent);
@@ -68,14 +75,14 @@ export const MyBlogs = () => {
     }
   };
   
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     const token = localStorage.getItem("token");
     if (confirm('Are you sure you want to delete this blog?')) {
       try {
         const response = await fetch(`${BACKEND_URL}/api/v1/blog/${id}`, {
           method: 'DELETE',
           headers: {
-            'Authorization': token
+            'Authorization': token || ""
           },
         });
 
@@ -94,7 +101,7 @@ export const MyBlogs = () => {
   if (loading) {
     return (
       <div>
-        <Appbar onSearch={(term) => setSearchTerm(term)} />
+        <Appbar onSearch={(term: string) => setSearchTerm(term)} />
         <div className="flex justify-center">
           <div>
             <BlogSkeleton />
@@ -110,16 +117,18 @@ export const MyBlogs = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Appbar onSearch={(term) => setSearchTerm(term)} />
+      <Appbar onSearch={(term: string) => setSearchTerm(term)} />
       {currentBlogs && currentBlogs.length > 0 ? (
         <div className="flex justify-center mt-8">
           <div className="w-full max-w-4xl">
-            {currentBlogs.map((blog) => (
+            {currentBlogs.map((blog: Blog) => (
               <div key={blog.id} className="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-2">{blog.title}</h2>
                 <p className="text-gray-600 text-sm mb-4">by {username}</p>
                 <p className="text-gray-700 mb-4">{blog.content}</p>
-                <p className="text-gray-500 text-sm mb-4">{format(new Date(blog.createdAt), "do MMM yyyy")}</p>
+                {blog.createdAt && ( // Ensure createdAt exists before formatting
+                  <p className="text-gray-500 text-sm mb-4">{format(new Date(blog.createdAt), "do MMM yyyy")}</p>
+                )}
                 <div className="flex space-x-4">
                   <button
                     onClick={() => openEditModal(blog.id, blog.title, blog.content)}
@@ -145,7 +154,7 @@ export const MyBlogs = () => {
       )}
       <Pagination
         blogsPerPage={blogsPerPage}
-        totalBlogs={filteredBlogs?.length}
+        totalBlogs={filteredBlogs?.length ?? 0}
         paginate={paginate}
         currentPage={currentPage}
       />

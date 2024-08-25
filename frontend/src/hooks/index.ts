@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 
-export interface Blog {
-  content: string;
-  title: string;
+type Blog = {
   id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  categories: string;
   author: {
     name: string;
   };
-}
+};
+
 
 export const useBlog = ({ id }: { id: string }) => {
   const [loading, setLoading] = useState(true);
@@ -36,21 +39,26 @@ export const useBlog = ({ id }: { id: string }) => {
 
 export const useBlogs = () => {
   const [loading, setLoading] = useState(true);
-  const [blogs, setBlogs] = useState<Blog>();
+  const [blogs, setBlogs] = useState<Blog[] | undefined>(undefined);
 
   const token = localStorage.getItem("token");
+  
   useEffect(() => {
     axios
       .get(`${BACKEND_URL}/api/v1/blog/bulk`, {
         headers: {
-          Authorization: token,
+          Authorization: token ? token : "",
         },
       })
       .then((response) => {
-        setBlogs(response.data);
+        setBlogs(response.data); // assuming response.data is an array of blogs
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching blogs:", error);
         setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   return { loading, blogs };
 };

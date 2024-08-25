@@ -1,28 +1,38 @@
 import { useState } from "react";
-import { Appbar } from "../components/AppBar";
+import { Appbar } from "../components/Appbar";
 import { useBlogs } from "../hooks";
 import { BlogCard } from "../components/BlogCard";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import Pagination from "../components/Pagination";
 
+type Blog = {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  categories: string;
+  author: {
+    name: string;
+  };
+};
+
 export const Blogs = () => {
-  const { loading, blogs } = useBlogs();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const { loading, blogs }: { loading: boolean; blogs: Blog[] | undefined } = useBlogs(); 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const blogsPerPage = 5;
 
   const categories = ["All", "SPORTS", "NEWS", "CRIME", "OTHERS"];
 
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
-  console.log(selectedCategory)
-  const filteredBlogs = blogs?.filter(
-   
-    (blog) =>
-      
-      (selectedCategory === "All" || blog.categories === selectedCategory) &&
-      (blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+
+  const safeBlogs = blogs ?? []; // Default to an empty array if blogs is undefined
+
+  const filteredBlogs = safeBlogs.filter((blog: Blog) =>
+    (selectedCategory === "All" || blog.categories === selectedCategory) &&
+    (blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       blog.content.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -30,9 +40,9 @@ export const Blogs = () => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
 
-  const currentBlogs = filteredBlogs?.slice(indexOfFirstBlog, indexOfLastBlog);
+  const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -43,7 +53,7 @@ export const Blogs = () => {
             key={category}
             onClick={() => {
               setSelectedCategory(category);
-              setCurrentPage(1); 
+              setCurrentPage(1);
             }}
             className={`mx-2 px-4 py-2 rounded-lg ${
               selectedCategory === category
@@ -66,7 +76,7 @@ export const Blogs = () => {
               <BlogSkeleton />
             </div>
           ) : (
-            currentBlogs?.map((blog) => (
+            currentBlogs.map((blog: Blog) => (
               <BlogCard
                 key={blog.id}
                 id={blog.id}
@@ -82,7 +92,7 @@ export const Blogs = () => {
       </div>
       <Pagination
         blogsPerPage={blogsPerPage}
-        totalBlogs={filteredBlogs?.length}
+        totalBlogs={filteredBlogs.length}
         paginate={paginate}
         currentPage={currentPage}
       />

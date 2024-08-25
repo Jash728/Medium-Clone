@@ -1,6 +1,24 @@
 import React from 'react';
 
-export const Modal = ({ isOpen, onClose, onSubmit, title, setTitle, content, setContent }) => {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  title: string;
+  setTitle: (title: string) => void;
+  content: string;
+  setContent: (content: string) => void;
+}
+
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  title,
+  setTitle,
+  content,
+  setContent,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -18,7 +36,7 @@ export const Modal = ({ isOpen, onClose, onSubmit, title, setTitle, content, set
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className="w-full mb-4 p-2 border border-gray-300 rounded"
-          rows="4"
+          rows={4}  
           placeholder="Content"
         />
         <div className="flex justify-end">
@@ -33,4 +51,3 @@ export const Modal = ({ isOpen, onClose, onSubmit, title, setTitle, content, set
     </div>
   );
 };
-

@@ -1,6 +1,14 @@
 import React from 'react';
 
-const Pagination = ({ blogsPerPage, totalBlogs, paginate, currentPage }) => {
+interface PaginationProps {
+  blogsPerPage: number;
+  totalBlogs: number;
+  paginate: (pageNumber: number) => void;
+  currentPage: number;
+}
+
+
+const Pagination: React.FC<PaginationProps> = ({ blogsPerPage, totalBlogs, paginate, currentPage }) => {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalBlogs / blogsPerPage); i++) {

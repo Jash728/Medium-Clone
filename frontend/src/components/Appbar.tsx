@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Avatar } from "./BlogCard";
 import { Link, useNavigate } from "react-router-dom";
 
-export const Appbar = ({ onSearch }) => {
+interface AppbarProps {
+  onSearch: (term: string) => void;
+}
+
+export const Appbar: React.FC<AppbarProps> = ({ onSearch }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -54,7 +58,7 @@ export const Appbar = ({ onSearch }) => {
             onClick={() => setDropdownOpen(!isDropdownOpen)}
             className="flex items-center"
           >
-            <Avatar size={"big"} name={user} />
+            <Avatar size={"big"} name={user || "Jash"} />
           </button>
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">

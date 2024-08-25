@@ -1,6 +1,10 @@
+import { ReactElement } from 'react';
 import { Navigate } from 'react-router-dom';
+interface ProtectedRouteProps {
+    element: ReactElement;
+  }
 
-const ProtectedRoute = ({ element }) => {
+const ProtectedRoute = ({ element }: ProtectedRouteProps) => {
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
 

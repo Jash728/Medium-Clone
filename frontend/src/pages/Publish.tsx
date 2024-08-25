@@ -36,7 +36,7 @@ export const Publish = () => {
 
   return (
     <div>
-      <Appbar />
+      <Appbar onSearch={(term) => console.log('Search term:', term)}/>
       <div className="flex justify-center w-full pt-8">
         <div className="max-w-screen-lg w-full">
           <input
