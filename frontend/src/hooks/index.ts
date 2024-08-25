@@ -51,7 +51,7 @@ export const useBlogs = () => {
         },
       })
       .then((response) => {
-        setBlogs(response.data); // assuming response.data is an array of blogs
+        setBlogs(response.data); 
         setLoading(false);
       })
       .catch((error) => {

@@ -11,11 +11,11 @@ type Blog = {
   id: string;
   title: string;
   content: string;
-  createdAt?: string; // Make this optional if it may not always be present
+  createdAt?: string; 
 };
 
 export const MyBlogs = () => {
-  const { loading, userblogs, refetch } = useBlogsbyuser(); // Remove the type argument
+  const { loading, userblogs, refetch } = useBlogsbyuser(); 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const blogsPerPage = 5;

@@ -14,7 +14,6 @@ type Blog = {
     };
   };
   
-// Update the Blog interface if needed
 export const FullBlog = ({ blog }: { blog: Blog }) => {
   return (
     <div>

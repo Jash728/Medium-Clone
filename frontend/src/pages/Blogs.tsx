@@ -28,7 +28,7 @@ export const Blogs = () => {
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
 
-  const safeBlogs = blogs ?? []; // Default to an empty array if blogs is undefined
+  const safeBlogs = blogs ?? []; 
 
   const filteredBlogs = safeBlogs.filter((blog: Blog) =>
     (selectedCategory === "All" || blog.categories === selectedCategory) &&
